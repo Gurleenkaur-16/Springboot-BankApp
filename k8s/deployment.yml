@@ -1,0 +1,58 @@
+kind: Deployment
+apiVersion: apps/v1
+
+metadata:
+  name: bankapp-deployment
+  namespace: bankapp-ns
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bankapp
+
+  template:
+    metadata:
+      name: bankapp-pod
+      namespace: bankapp-ns
+      labels:
+        app: bankapp
+
+    spec:
+      containers:
+      - name: bankapp-container
+        image: gurleen16/springboot-bankapp:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: SPRING_DATASOURCE_PASSWORD
+
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-configmap
+              key: MYSQL_DATABASE
+
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-configmap
+              key: SPRING_DATASOURCE_USERNAME
+
+        - name: SPRING_DATASOURCE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-configmap
+              key: SPRING_DATASOURCE_URL
+
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
