@@ -23,7 +23,10 @@ spec:
               value: root
 
             - name: SPRING_DATASOURCE_PASSWORD
-              value: Test@123
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: SPRING_DATASOURCE_PASSWORD 
 
             - name: SPRING_DATASOURCE_URL
               value: jdbc:mysql://mysql:3306/BankDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
