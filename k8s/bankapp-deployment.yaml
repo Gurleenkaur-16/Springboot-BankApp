@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bankapp-backend
+  namespace: bankapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bankapp-backend
+  template:
+    metadata:
+      labels:
+        app: bankapp-backend
+    spec:
+      containers:
+        - name: bankapp-backend
+          image: 747938282480.dkr.ecr.eu-west-1.amazonaws.com/bankapp-backend:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: Test@123
+
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql:3306/BankDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC

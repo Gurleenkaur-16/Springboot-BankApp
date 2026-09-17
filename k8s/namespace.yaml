@@ -1,6 +1,5 @@
 kind: Namespace
 apiVersion: v1
-
 metadata:
-  name: bankapp-ns
+  name: bankapp
 
