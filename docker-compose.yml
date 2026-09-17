@@ -18,6 +18,9 @@ services:
       start_period: 30s
 
   mainapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: ${DUSER}/${IMAGE}
     container_name: Bankapp
     environment:

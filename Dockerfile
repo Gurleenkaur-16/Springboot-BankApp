@@ -27,6 +27,9 @@ RUN mvn clean install -DskipTests=true
 # Import small size java image
 FROM eclipse-temurin:17-jre as deployer
 
+# Install curl for Docker health check
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 # Copy build from stage 1 (builder)
 COPY --from=builder /src/target/*.jar /src/target/bankapp.jar
 
