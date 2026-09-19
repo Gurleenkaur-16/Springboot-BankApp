@@ -2,7 +2,7 @@ name: BankApp CI/CD
 
 on:
   push:
-    branches: [main]
+    branches: [DevOps]
 
 jobs:
   build:
