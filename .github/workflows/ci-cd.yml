@@ -34,6 +34,18 @@ jobs:
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+      - name: Deploy to EKS
+        env:
+          IMAGE: 747938282480.dkr.ecr.eu-west-1.amazonaws.com/bankapp-backend:${{ github.sha }}
+        run: |
+           kubectl -n bankapp set image deployment/bankapp-backend \
+              bankapp-backend=$IMAGE
+
+      - name: Verify deployment
+        run: | 
+           kubectl -n bankapp rollout status deployment/bankapp-backend
+      
         
              
         
