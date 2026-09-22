@@ -6,6 +6,7 @@ resource "aws_iam_openid_connect_provider" "github" {
   ]
 }
 data "aws_iam_policy_document" "github_actions_assume_role" {
+  # Statement 1: Allow GitHub Actions to assume the IAM role
   statement {
     effect = "Allow"
 
@@ -42,6 +43,8 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
     }
   }
 }
+
+
 resource "aws_iam_role" "github_actions_ecr" {
   name = "github-actions-bankapp-ecr"
 
@@ -71,6 +74,18 @@ data "aws_iam_policy_document" "github_actions_ecr" {
 
     resources = [
       "arn:aws:ecr:eu-west-1:747938282480:repository/bankapp-backend"
+    ]
+  }
+  # Statement 2: Allow GitHub Actions to describe the EKS cluster
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "eks:DescribeCluster"
+    ]
+
+    resources = [
+      "arn:aws:eks:eu-west-1:747938282480:cluster/gurleen-eks-cluster"
     ]
   }
 }
