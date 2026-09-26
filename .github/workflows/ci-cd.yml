@@ -46,7 +46,13 @@ jobs:
           aws sts get-caller-identity
           kubectl config current-context
           kubectl get nodes
-          
+
+       # Apply Kubernetes YAML files first
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -f k8s/
+
+       # Then update the image to the latest build
       - name: Deploy to EKS
         env:
           IMAGE: 747938282480.dkr.ecr.eu-west-1.amazonaws.com/bankapp-backend:${{ github.sha }}
