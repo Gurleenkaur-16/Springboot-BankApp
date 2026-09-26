@@ -47,10 +47,10 @@ jobs:
           kubectl config current-context
           kubectl get nodes
 
-       # Apply Kubernetes YAML files first
-      - name: Apply Kubernetes manifests
+      - name: Create Kubernetes namespace
         run: |
-          kubectl apply -f k8s/
+          kubectl create namespace bankapp \
+            --dry-run=client -o yaml | kubectl apply -f -
 
        # Then update the image to the latest build
       - name: Deploy to EKS
