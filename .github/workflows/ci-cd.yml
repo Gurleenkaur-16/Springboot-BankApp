@@ -51,7 +51,10 @@ jobs:
         run: |
           kubectl create namespace bankapp \
             --dry-run=client -o yaml | kubectl apply -f -
-
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -f k8s/
+          
        # Then update the image to the latest build
       - name: Deploy to EKS
         env:
