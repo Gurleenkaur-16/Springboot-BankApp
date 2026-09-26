@@ -2,6 +2,11 @@ resource "aws_eks_cluster" "gurleen_cluster" {
   name     = "gurleen-eks-cluster"
   role_arn = aws_iam_role.eks_cluster_role.arn
 
+  access_config {
+    authentication_mode                         = "API_AND_CONFIG_MAP"
+    bootstrap_cluster_creator_admin_permissions = true
+  }
+
   vpc_config {
     subnet_ids = aws_subnet.gurleen_subnet[*].id
 
@@ -74,13 +79,17 @@ resource "aws_eks_addon" "ebs_csi" {
 }
 
 resource "aws_eks_access_entry" "github_actions" {
-  cluster_name  = "gurleen-eks-cluster"
+  cluster_name  = aws_eks_cluster.gurleen_cluster.name
   principal_arn = aws_iam_role.github_actions_ecr.arn
   type          = "STANDARD"
+
+  depends_on = [
+    aws_eks_cluster.gurleen_cluster
+  ]
 }
 
 resource "aws_eks_access_policy_association" "github_actions" {
-  cluster_name  = "gurleen-eks-cluster"
+  cluster_name  = aws_eks_cluster.gurleen_cluster.name
   principal_arn = aws_iam_role.github_actions_ecr.arn
 
   policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
@@ -88,4 +97,8 @@ resource "aws_eks_access_policy_association" "github_actions" {
   access_scope {
     type = "cluster"
   }
+
+  depends_on = [
+    aws_eks_access_entry.github_actions
+  ]
 }
